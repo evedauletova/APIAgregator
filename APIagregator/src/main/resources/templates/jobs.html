@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Jobs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="http://localhost:35729/livereload.js"></script>
+</head>
+<body>
+<div th:insert="~{fragments/header.html::header}"></div>
+<div class="container">
+    <div class="container text-center">
+        <div class="row d-flex justify-content-center">
+
+            <form method="post"action="/jobs">
+                <div class="mb-3">
+                    <label for="InputQRtext" class="form-label">Job Search</label>
+                    <input type="text" name="query" class="form-control" id="InputQRtext" aria-describedby="QRtextHelp">
+                    <div id="QRtextHelp" class="form-text">Enter text to find job</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Find</button>
+            </form>
+        </div>
+        <div th:each="job:${job_response.job}">
+            <div class="job my-3 container d-flex flex-column align-items-start">
+                <img class="employerImg" th:src="@{${job.employerLogo}}">
+                <h2 class="jobHeader" th:text="${job.jobTitle}"></h2>
+                <span class="location"  th:text="${job.employerName+' * '+job.jobCity+', '+job.jobState+', '+job.country}"></span>
+                <div class="jobDescription container d-flex flex-column align-items-start">
+                    <h3 class="jobHeader">Description:</h3>
+                    <p class="text-start"  th:text="${job.jobDescription}"></p>
+                    <h3 class="jobHeader">Job Link:</h3>
+                    <p th:text="${job.jobLink}"></p>
+                    <h3 class="jobHeader">Minimum Salary:</h3>
+                    <p th:text="${job.minSalary!=0}?${job.minSalary}:'Not specified'" ></p>
+                    <h3 class="jobHeader">Max Salary:</h3>
+                    <p th:text="${job.maxSalary!=0}?${job.maxSalary}:'Not specified'" ></p>
+                    <h3 class="jobHeader">Job Is Remote:</h3>
+                    <p th:text="${job.jobIsRemote}?'Yes':'No'" ></p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
