@@ -8,6 +8,10 @@ import java.util.Collection;
 public class MyUserDetails implements UserDetails {
     private User user;
 
+    public User getUser() {
+        return user;
+    }
+
     public MyUserDetails(User user) {
         this.user = user;
     }
@@ -44,6 +48,6 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isVerified();
     }
 }

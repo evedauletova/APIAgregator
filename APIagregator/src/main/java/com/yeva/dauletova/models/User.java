@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -31,5 +33,7 @@ public class User {
     private EmailConfirmationToken verificationToken;
     @Column(columnDefinition = "boolean default false")
     private boolean verified;
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews;
 
 }

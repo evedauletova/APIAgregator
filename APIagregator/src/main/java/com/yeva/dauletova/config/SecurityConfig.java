@@ -39,21 +39,23 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .authorizeHttpRequests((auth)->auth
-                        .requestMatchers("/").permitAll()
 
+                .authorizeHttpRequests((auth)->auth
+                        .requestMatchers("/css/**", "/images/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/auth/login").anonymous()
                         .requestMatchers("/auth/register").permitAll()
                         .requestMatchers("/auth/confirm-email").permitAll()
+                        .requestMatchers("/reviews").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
                         .loginPage("/auth/login").permitAll()
                         .defaultSuccessUrl("/")
 
-                );
+                )
+                .logout(logout->logout.logoutUrl("/auth/logout"))
+                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
         return http.build();
 
     }
