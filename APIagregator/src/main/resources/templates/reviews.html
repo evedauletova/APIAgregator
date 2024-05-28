@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/ce62f06a9a.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div th:insert="~{fragments/header.html::header}"></div>
@@ -21,13 +22,15 @@
         <input type="submit" value="submit" class="form-control">
     </form>
 </div>
+<i class="fa-regular fa-heart"></i>
 <div class="container mt-4" th:each="review:${reviews}">
     <div class="card" style="width: 18rem;">
         <div class="card-body">
-            <h5 class="card-title" th:text="${review.user.getFirstname()+' '+review.user.getLastname()}"></h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${review.createdDate}"></h6>
-            <p class="card-text" th:text="${review.text}"></p>
-            <a href="#" class="card-link">Like</a>
+            <h5 class="card-title" th:text="${review.review.user.getFirstname()+' '+review.review.user.getLastname()}"></h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary" th:text="${review.review.createdAt}"></h6>
+            <p class="card-text" th:text="${review.review.text}"></p>
+            <a th:href="@{/reviews/like/{id}(id=review.review.id)}" th:if="${!review.isLiked}" class="card-link"><i class="fa-regular fa-heart"></i></a>
+            <a th:href="@{/reviews/unlike/{id}(id=review.review.id)}" th:if="${review.isLiked}" class="card-link"><i class="fa-solid fa-heart"></i></a>
         </div>
     </div>
 
@@ -36,15 +39,21 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
+                <a class="page-link" th:if="${currentPage==0}" href="#" aria-label="Previous">
+                    <span aria-hidden="true" >&laquo;</span>
+                </a>
+                <a class="page-link" th:if="${currentPage>0}" th:href="@{/reviews(page=${currentPage-1})}" aria-label="Previous">
+                    <span aria-hidden="true" >&laquo;</span>
                 </a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" th:href="@{/reviews(page=${currentPage})}" th:text="${currentPage+1}"></a></li>
+            <li class="page-item"><a class="page-link"  th:if="${(currentPage+2)<=totalPages}" th:href="@{/reviews(page=${currentPage+1})}" th:text="${currentPage+2}">2</a></li>
+            <li class="page-item"><a class="page-link" th:if="${(currentPage+3)<=totalPages}" th:href="@{/reviews(page=${currentPage+2})}" th:text="${currentPage+3}" href="#">3</a></li>
             <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
+                <a class="page-link" th:if="${(currentPage+4)>=totalPages}" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+                <a class="page-link" th:if="${(currentPage+4)<totalPages}" th:href="@{/reviews(page=${currentPage+3})}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
